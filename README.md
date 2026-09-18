@@ -1,47 +1,47 @@
-# Logistics & Inventory Management Database System (T-SQL)
+# Logistics & Inventory Management System: From Conceptual ERD to T-SQL Implementation
 
 ## 📌 Project Overview
-This project features a comprehensive Relational Database Management System (RDBMS) designed to optimize and automate the core operations of a logistics and supply chain company. Built using **Microsoft SQL Server (T-SQL)**, the system models real-world business logic by managing suppliers, inventory levels, warehouse capacities, customer orders, and vehicle statuses.
+This project demonstrates the end-to-end engineering cycle of a **Relational Database Management System (RDBMS)** designed to optimize supply chain and logistics operations. The system models complex real-world workflows including fleet tracking, multi-regional warehouse management, tiered inventory control, and automated customer order lifecycles.
 
-The core strength of this database lies in its embedded automation via dynamic **Triggers** and **User-Defined Functions (UDFs)**, showcasing industrial engineering process-optimization mindset.
-
----
-
-## 🏗️ Database Schema & Architecture
-The system consists of **10 interconnected tables** with strict relational integrity (`PRIMARY KEY`, `FOREIGN KEY`, and data constraints):
-- **Tedarikçi (Supplier):** Stores supplier details and company identities.
-- **Araç (Vehicle):** Tracks fleet capacity, vehicle types (Tır, Kamyon, Kamyonet), and current status (Bakımda, Yolda, Müsait).
-- **Depo (Warehouse):** Manages regional and central warehouses with volumetric capacities.
-- **Müsteri (Customer):** Contains verified customer contact and shipping data.
-- **Ürün (Product):** Inventory catalog categorized by domain with unit prices.
-- **Sipariş (Order) & Sipariş_Detayı (Order Details):** Handles lifecycle, status (Hazırlanıyor, Yolda, Teslim, İptal), and item quantities.
-- **Stok (Inventory):** Monitors real-time stock levels, warehouse locations (Shelf numbers), and auto-updates timestamps.
-- **Personel (Staff):** Assigns staff to specific warehouses or vehicles (Drivers vs. Warehouse clerks).
-- **Taşıma (Shipment):** Bridges active vehicle fleets with ongoing customer orders.
+The distinct feature of this project is its strict adherence to **Database Normalization (up to 3NF)** and structural blueprints mapped out via **ERD (Entity-Relationship Diagrams)** and **UML Class Diagrams** before full deployment in **Microsoft SQL Server (T-SQL)**.
 
 ---
 
-## ⚙️ Advanced Database Automation (Triggers & Functions)
+## 📐 Systems Design & Architecture
 
-### 🚀 Smart Triggers (Automation)
-1. **`trg_Stokekleme` (Auto-Replenishment):** Automatically detects if a product's stock falls below **50 units** after an update, and triggers an automated replenishment of **+300 units** to prevent stockouts.
-2. **`trg_Stokyetersiz` (Inventory Safeguard):** Intercepts new orders before insert. If the requested quantity exceeds active stock, it rollbacks the transaction with a warning, protecting data integrity.
-3. **`trg_Siparişiptali` (Reverse Logistics):** If an order status changes to 'İptal' (Cancelled), this trigger automatically reverses the inventory deduction and returns the items to stock.
-4. **`trg_teslim_tarihi_ekle` (Timestamp Enforcement):** Automatically logs the exact execution date and time using `GETDATE()` the moment an order status switches to 'Teslim' (Delivered).
+### 1. Conceptual Design (ER Diagram)
+- Mapped all primary corporate entities (Customers, Orders, Products, Warehouses, Staff, Fleet Vehicles, and Suppliers).
+- Defined precise cardinality constraints (e.g., 1:N mapping between Warehouses and Personnel; N:M mapping between Orders and Products resolved via a bridge transaction table).
 
-### 📊 Business Intelligence Functions (UDFs)
-- **`kategorikçağırma`:** A table-valued function that instantly filters the entire product catalog based on a selected category (e.g., 'Elektronik').
-- **`toplamfiyat`:** Computes the exact total monetary value of an entire order by joining order details with product price metrics.
-- **`araçdurum`:** An algorithmic function that translates vehicle operational data into logistical states ('Dolu' / 'Boş') based on maintenance or delivery tracks.
+### 2. Logical Design & Object Metaphor (UML Class Diagram)
+- Enforced object-oriented definitions for database tables, defining explicit operational behaviors/methods such as `SiparisOlustur()`, `MiktarGuncelle()`, and `AracDurumuGuncelle()`.
 
----
-
-## 🛠️ Tech Stack & Tools
-- **RDBMS:** Microsoft SQL Server
-- **Language:** T-SQL (Transact-SQL)
-- **Concepts Applied:** Normalization, Joins, Aggregations, Subqueries, Triggers, User-Defined Functions.
+### 3. Database Normalization (1NF ➡️ 2NF ➡️ 3NF)
+- **1NF:** Eradicated multi-valued attributes (comma-separated product lines inside unique order entries).
+- **2NF:** Eliminated partial dependencies by separating transactional order parameters from core master product data.
+- **3NF:** Eliminated transitive dependencies, decoupling geographic attributes (addresses, cities) from employee and supplier tables to establish an anomaly-free database schema.
 
 ---
 
-## 📈 Future Steps: Power BI Dashboard
-*Note: This database will soon be connected to **Power BI** to build an interactive Logistics Performance Dashboard, tracking fleet utilization, warehouse occupancy rates, and sales performance indicators.*
+## ⚙️ Programmable Database Automation (T-SQL)
+
+### 🚀 Automation Triggers
+- **`trg_Stokekleme` (Just-In-Time Replenishment):** Monitors inventory drops. If any item's stock dips below **50 units**, it triggers an automated batch order of **+300 units**.
+- **`trg_Stokyetersiz` (Transaction Control & Rollback):** Acts as a barrier against stockouts. If a customer places an order exceeding active warehouse availability, it terminates the query and alerts the system.
+- **`trg_Siparişiptali` (Reverse Logistics Automation):** Instantly returns cancelled items back to respective warehouse quantities when an order state is updated to 'İptal'.
+
+### 📊 Business Logic Functions (UDFs)
+- **`toplamfiyat`:** Aggregates real-time unit prices and order quantities to yield invoice amounts.
+- **`araçdurum`:** Programmatically reports fleet status ('Dolu' / 'Boş') based on real-time vehicle dispatch metrics.
+
+---
+
+## 🛠️ Technology Stack
+- **Database Engine:** Microsoft SQL Server (SSMS)
+- **Programming Language:** T-SQL (Transact-SQL)
+- **Modeling Tools:** ERD Notation, UML Class Modeling, Excel-based 3NF Normalization Mapping.
+
+---
+
+## 🚀 Next Phase: Business Intelligence
+The architecture is fully ready to be connected with **Power BI Desktop** to design real-time data streaming visuals for warehouse capacity tracking, fleet performance, and order velocity.
